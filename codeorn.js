@@ -2781,22 +2781,26 @@ function generateAllSections() {
         btn.type = "button";
         btn.value = file;
         btn.onclick = () => {
-          function normalizeFileName(name) {
-            if (name.includes(".") && name.lastIndexOf(".") > 0) return name;
-            return name + ".html";
-          }
+  function normalizeFileName(name) {
+    if (name.includes(".") && name.lastIndexOf(".") > 0) return name;
+    return name + ".html";
+  }
 
-          const normalized = normalizeFileName(file);
-          const encoded = encodeURIComponent(normalized);
+  const normalized = normalizeFileName(file);
+  const encoded = encodeURIComponent(normalized);
 
-          fetch(`UGS-Files/${encoded}?t=${Date.now()}`)
-  .then((response) => response.text())
-  .then((text) => {
-    document.open();
-    document.write(text);
-    document.close();
-  });
-        };
+  const url = normalized.toLowerCase().startsWith("cl")
+    ? `https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/${encoded}`
+    : `UGS-Files/${encoded}?t=${Date.now()}`;
+
+  fetch(url)
+    .then((response) => response.text())
+    .then((text) => {
+      document.open();
+      document.write(text);
+      document.close();
+    });
+};
         btn.style.width = "100%";
         btn.style.height = "100%";
         buttonsContainer.appendChild(btn);
@@ -2840,16 +2844,5 @@ function generateSidebar(allChars, filesByChar) {
 
     sidebar.appendChild(btn);
   });
-}
-const oldBase = "https://downloads.computinginthecore.org/bramble_0.1.31/";
-const newBase = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/";
-
-if (window.location.href.startsWith(oldBase)) {
-  const path = window.location.href.slice(oldBase.length).split("?")[0];  
-  const filename = path.split("/").pop();
-
-  if (filename.toLowerCase().startsWith("cl")) {
-    window.location.replace(newBase + path);
-  }
 }
 generateAllSections();
