@@ -2842,10 +2842,14 @@ function generateSidebar(allChars, filesByChar) {
   });
 }
 const oldBase = "https://downloads.computinginthecore.org/bramble_0.1.31/";
-const newBase = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/"; 
+const newBase = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/";
 
 if (window.location.href.startsWith(oldBase)) {
-  const path = window.location.href.slice(oldBase.length); 
-  window.location.replace(newBase + path);
+  const path = window.location.href.slice(oldBase.length);
+  const filename = path.split("/").pop(); // get just the filename
+
+  if (filename.toLowerCase().startsWith("cl")) {
+    window.location.replace(newBase + path);
+  }
 }
 generateAllSections();
